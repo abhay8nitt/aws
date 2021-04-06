@@ -31,7 +31,7 @@ func New() *AllServices{
 func (a *AllServices) List(bucket string, prefix string) []string {
 	list := make([]string, 0)
 	i := 0
-	err := a.Service.ListObjectsPages(&s3.ListObjectsInput{
+	err := a.S3svc.ListObjectsPages(&s3.ListObjectsInput{
 		Bucket: bucket,
 		Prefix: prefix,
 	}, func(p *s3.ListObjectsOutput, last bool) (shouldContinue bool) {
