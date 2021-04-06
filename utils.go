@@ -79,3 +79,17 @@ func (a *AllServices) PublishCloudWatchMetrics(){
 	})
 	fmt.Println(err)	
 }
+
+func (a *AllServices)Copy(bucket string, key string) string {
+     filename := strconv.Itoa(time.Now().Nanosecond()) + "-" + "-temp.gz"
+     file, _ := os.Create(filename)
+     _, err := a.Downloader.Download(file,
+	   &s3.GetObjectInput{
+	       Bucket: aws.String(bucket),
+	       Key:    aws.String(key),
+	})
+      if err != nil {
+	 fmt.Println("failed to download file")
+      }
+     return filename
+}
