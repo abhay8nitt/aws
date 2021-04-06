@@ -93,3 +93,29 @@ func (a *AllServices)Copy(bucket string, key string) string {
       }
      return filename
 }
+
+func (a *AllServices) DynamoDbQuery() {
+	expressionAttributeValues := map[string]*dynamodb.AttributeValue{
+		":k": {
+			S: aws.String("customers"),
+		},
+	}
+	expressionAttributeNames := map[string]*string{
+		"#c1": aws.String("key"),
+		"#c2": aws.String("bucket"),
+	}
+	params := &dynamodb.QueryInput{
+		ExpressionAttributeNames:  expressionAttributeNames,
+		ExpressionAttributeValues: expressionAttributeValues,
+		ProjectionExpression:      aws.String("#c1,#c2"),
+		TableName:                 aws.String(a.Args.DynamoTable),
+		KeyConditionExpression:    aws.String("customer =:k"),
+	}
+	res, _ := a.Dynamodbsvc.Query(params)
+	for _, i := range res.Items {
+		cust := i["key"].S
+		bucket := i["bucket"].S
+		}
+	}
+}
+
