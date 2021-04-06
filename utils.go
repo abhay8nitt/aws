@@ -48,3 +48,34 @@ func (a *AllServices) List(bucket string, prefix string) []string {
 	}
 	return list
 }
+
+func (a *AllServices) PublishCloudWatchMetrics(){
+	_, err := a.CloudWatchsvc.PutMetricData(&cloudwatch.PutMetricDataInput{
+		Namespace: aws.String("mynamespace"),
+		MetricData: []*cloudwatch.MetricDatum{
+		{
+			MetricName: aws.String("numBytes"),
+			Unit:       aws.String("Count"),
+			Value:      aws.Float64(50),
+			Dimensions: []*cloudwatch.Dimension{
+			{
+				Name:  aws.String("customer"),
+				Value: aws.String("test"),
+			},
+		},
+	    },
+		{
+			MetricName: aws.String("numEvents"),
+			Unit:       aws.String("Count"),
+			Value:      aws.Float64(100),
+			Dimensions: []*cloudwatch.Dimension{
+			{
+				Name:  aws.String("customer"),
+				Value: aws.String("test"),
+			},
+		},
+	    },
+	 },
+	})
+	fmt.Println(err)	
+}
